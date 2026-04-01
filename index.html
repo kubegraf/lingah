@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lingah — One app for your entire life</title>
+<meta name="description" content="Stop toggling between 10 apps. Lingah unifies your tasks, money, health, and goals into one beautifully simple platform.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#07080f;--accent:#ff5c35;--ivory:#eeedf5;--muted:#8a8a9b;
+  --card-border:rgba(255,255,255,0.07);--card-bg:rgba(255,255,255,0.03);
+  --glass:rgba(7,8,15,0.7);--teal:#00c2a8;--violet:#8b5cf6;--blue:#3b82f6;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ivory);font-family:'Plus Jakarta Sans',sans-serif;font-weight:400;line-height:1.6;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.035;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")}
+h1,h2,h3,h4,h5{font-family:'Syne',sans-serif;font-weight:800;line-height:1.1}
+a{color:inherit;text-decoration:none}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.gradient-text{background:linear-gradient(135deg,var(--accent),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* Fade-in animation */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ─── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px 0;transition:background .3s,backdrop-filter .3s}
+nav.scrolled{background:var(--glass);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid var(--card-border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;background:linear-gradient(135deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{font-size:.9rem;font-weight:400;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:var(--ivory)}
+.nav-right{display:flex;align-items:center;gap:16px}
+.btn-ghost{padding:10px 20px;border:1px solid var(--card-border);border-radius:10px;background:transparent;color:var(--ivory);font-family:inherit;font-size:.9rem;cursor:pointer;transition:border-color .2s}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.2)}
+.btn-coral{padding:10px 24px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-family:inherit;font-size:.9rem;font-weight:500;cursor:pointer;transition:transform .15s,box-shadow .2s}
+.btn-coral:hover{transform:translateY(-1px);box-shadow:0 8px 30px rgba(255,92,53,0.3)}
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--ivory);border-radius:2px;transition:transform .2s}
+
+/* ─── HERO ─── */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 60px;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:.35;pointer-events:none}
+.orb-1{width:500px;height:500px;background:var(--accent);top:-100px;right:-150px}
+.orb-2{width:400px;height:400px;background:var(--violet);bottom:0;left:-100px}
+.orb-3{width:350px;height:350px;background:var(--teal);top:40%;left:50%;transform:translateX(-50%)}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:100px;border:1px solid var(--card-border);background:var(--card-bg);font-size:.85rem;color:var(--muted);margin-bottom:32px;font-weight:400}
+.badge span{color:var(--accent)}
+.hero h1{font-size:clamp(2.8rem,8vw,6.5rem);margin-bottom:24px;position:relative;z-index:1}
+.hero h1 .line2{background:linear-gradient(90deg,var(--accent),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{max-width:580px;color:var(--muted);font-size:1.1rem;font-weight:300;line-height:1.7;margin-bottom:40px;position:relative;z-index:1}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;position:relative;z-index:1;margin-bottom:64px}
+
+/* ─── BROWSER MOCKUP ─── */
+.browser-mock{position:relative;z-index:1;width:100%;max-width:960px;border-radius:24px;border:1px solid var(--card-border);background:rgba(12,13,22,0.9);overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.5)}
+.browser-bar{display:flex;align-items:center;gap:8px;padding:16px 20px;border-bottom:1px solid var(--card-border)}
+.browser-dot{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.08)}
+.browser-dot:nth-child(1){background:#ff5f57}
+.browser-dot:nth-child(2){background:#ffbd2e}
+.browser-dot:nth-child(3){background:#28ca42}
+.browser-url{flex:1;margin-left:12px;padding:6px 16px;border-radius:8px;background:rgba(255,255,255,0.04);color:var(--muted);font-size:.78rem}
+.app-dash{display:grid;grid-template-columns:200px 1fr;min-height:380px}
+.app-sidebar{border-right:1px solid var(--card-border);padding:20px 16px;display:flex;flex-direction:column;gap:4px}
+.app-sidebar-item{padding:8px 12px;border-radius:8px;font-size:.8rem;color:var(--muted);cursor:default}
+.app-sidebar-item.active{background:rgba(255,92,53,0.1);color:var(--accent)}
+.app-main{padding:20px;display:flex;flex-direction:column;gap:16px}
+.metric-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.metric-card{padding:16px;border-radius:12px;border:1px solid var(--card-border);background:var(--card-bg)}
+.metric-card .label{font-size:.7rem;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.metric-card .val{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700}
+.metric-card:nth-child(1) .val{color:var(--accent)}
+.metric-card:nth-child(2) .val{color:var(--teal)}
+.metric-card:nth-child(3) .val{color:var(--blue)}
+.metric-card:nth-child(4) .val{color:var(--violet)}
+.panels-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1}
+.panel{border-radius:12px;border:1px solid var(--card-border);background:var(--card-bg);padding:16px}
+.panel-title{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;margin-bottom:12px}
+.task-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--card-border);font-size:.78rem;color:var(--muted)}
+.task-check{width:14px;height:14px;border-radius:4px;border:1.5px solid var(--card-border);flex-shrink:0}
+.task-item.done .task-check{background:var(--accent);border-color:var(--accent)}
+.task-item.done{text-decoration:line-through;opacity:.5}
+.habit-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--card-border);font-size:.78rem;color:var(--muted)}
+.habit-dots{display:flex;gap:4px}
+.habit-dot{width:16px;height:16px;border-radius:4px;background:rgba(255,255,255,0.04)}
+.habit-dot.filled{background:var(--teal);opacity:.8}
+
+/* ─── MARQUEE ─── */
+.marquee-section{padding:40px 0;border-top:1px solid var(--card-border);border-bottom:1px solid var(--card-border);overflow:hidden;background:rgba(0,0,0,0.3)}
+.marquee-track{display:flex;gap:48px;animation:marquee 30s linear infinite;width:max-content}
+.marquee-item{white-space:nowrap;font-size:1rem;color:var(--muted);font-weight:300;display:flex;align-items:center;gap:8px}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ─── STATS ─── */
+.stats-section{padding:120px 24px}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:48px;text-align:center}
+.stat-number{font-family:'Syne',sans-serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:800;color:var(--accent);margin-bottom:8px}
+.stat-label{color:var(--muted);font-size:.95rem;font-weight:300;max-width:280px;margin:0 auto;line-height:1.5}
+
+/* ─── FEATURES BENTO ─── */
+.features-section{padding:120px 24px}
+.section-eyebrow{font-size:.85rem;color:var(--accent);font-weight:500;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
+.section-headline{font-size:clamp(2rem,4vw,3.2rem);margin-bottom:64px}
+.bento-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.bento-card{position:relative;padding:32px;border-radius:16px;border:1px solid var(--card-border);background:var(--card-bg);transition:transform .25s,border-color .25s,box-shadow .25s;overflow:hidden}
+.bento-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity .25s}
+.bento-card:hover{transform:translateY(-4px);border-color:rgba(255,92,53,0.2);box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.bento-card:hover::before{opacity:1}
+.bento-card.wide{grid-column:span 2}
+.bento-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:20px}
+.bento-card h3{font-size:1.2rem;margin-bottom:8px;font-weight:700}
+.bento-card p{color:var(--muted);font-size:.9rem;font-weight:300;line-height:1.6}
+.bento-tag{display:inline-block;padding:4px 12px;border-radius:100px;font-size:.7rem;border:1px solid var(--card-border);color:var(--muted);margin-top:16px;font-weight:400}
+.bento-placeholder{border-style:dashed;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.95rem}
+
+/* ─── HOW IT WORKS ─── */
+.hiw-section{padding:120px 24px}
+.hiw-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+.hiw-steps{display:flex;flex-direction:column;gap:24px}
+.hiw-step{display:flex;gap:20px;padding:20px;border-radius:16px;cursor:pointer;transition:background .2s;align-items:flex-start}
+.hiw-step:hover{background:var(--card-bg)}
+.hiw-step.active{background:var(--card-bg)}
+.step-num{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;flex-shrink:0;border:2px solid var(--card-border);color:var(--muted);transition:all .2s}
+.hiw-step.active .step-num{background:var(--accent);border-color:var(--accent);color:#fff}
+.step-content h3{font-size:1.15rem;font-weight:700;margin-bottom:6px}
+.step-content p{color:var(--muted);font-size:.9rem;font-weight:300;line-height:1.5}
+.hiw-visual{border-radius:20px;border:1px solid var(--card-border);background:var(--card-bg);padding:32px;min-height:360px;position:sticky;top:120px}
+.hiw-panel{display:none}
+.hiw-panel.active{display:block}
+.hiw-panel h4{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:20px;color:var(--ivory)}
+.hiw-module-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hiw-module{padding:16px;border-radius:12px;border:1px solid var(--card-border);background:rgba(255,255,255,0.02);font-size:.85rem}
+.hiw-module .m-icon{font-size:1.2rem;margin-bottom:6px}
+.hiw-module .m-name{font-weight:500;margin-bottom:2px}
+.hiw-module .m-desc{color:var(--muted);font-size:.75rem;font-weight:300}
+.hiw-module.selected{border-color:var(--accent);background:rgba(255,92,53,0.06)}
+.hiw-unified{display:flex;flex-direction:column;gap:12px}
+.hiw-unified-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;border:1px solid var(--card-border);background:rgba(255,255,255,0.02);font-size:.85rem}
+.hiw-unified-row .u-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ─── PRICING ─── */
+.pricing-section{padding:120px 24px}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:800px;margin:0 auto}
+.price-card{padding:40px;border-radius:20px;border:1px solid var(--card-border);background:var(--card-bg);position:relative;overflow:hidden}
+.price-card.pro::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--violet))}
+.price-card.pro{box-shadow:0 0 80px rgba(139,92,246,0.08)}
+.price-label{font-family:'Syne',sans-serif;font-weight:700;font-size:1.3rem;margin-bottom:8px}
+.price-amount{font-family:'Syne',sans-serif;font-weight:800;font-size:2.5rem;margin-bottom:4px}
+.price-period{color:var(--muted);font-size:.85rem;margin-bottom:24px}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:32px}
+.price-features li{display:flex;align-items:center;gap:10px;font-size:.9rem;font-weight:300;color:var(--ivory)}
+.price-features li.dimmed{color:var(--muted);opacity:.5}
+.price-features li::before{content:'✓';color:var(--accent);font-weight:700;font-size:.8rem}
+.price-features li.dimmed::before{content:'—';color:var(--muted)}
+.price-card .btn-coral,.price-card .btn-ghost{width:100%;text-align:center;display:block;padding:14px}
+
+/* ─── TESTIMONIALS ─── */
+.testimonials-section{padding:120px 24px}
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.test-card{padding:32px;border-radius:16px;border:1px solid var(--card-border);background:var(--card-bg)}
+.test-stars{color:var(--accent);font-size:.9rem;margin-bottom:16px;letter-spacing:2px}
+.test-quote{font-size:.95rem;font-weight:300;line-height:1.7;color:var(--ivory);margin-bottom:24px}
+.test-author{display:flex;align-items:center;gap:12px}
+.test-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;color:#fff}
+.test-name{font-weight:500;font-size:.9rem}
+.test-loc{color:var(--muted);font-size:.78rem;font-weight:300}
+
+/* ─── FINAL CTA ─── */
+.final-cta{position:relative;padding:120px 24px;text-align:center;overflow:hidden}
+.final-cta::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:var(--accent);filter:blur(180px);opacity:.12;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.final-cta h2{font-size:clamp(2rem,4vw,3.2rem);margin-bottom:40px;position:relative;z-index:1}
+.cta-row{display:flex;justify-content:center;gap:0;max-width:480px;margin:0 auto;position:relative;z-index:1}
+.cta-row input{flex:1;padding:16px 20px;border:1px solid var(--card-border);border-right:none;border-radius:12px 0 0 12px;background:var(--card-bg);color:var(--ivory);font-family:inherit;font-size:.95rem;outline:none}
+.cta-row input::placeholder{color:var(--muted)}
+.cta-row .btn-coral{border-radius:0 12px 12px 0;white-space:nowrap}
+
+/* ─── FOOTER ─── */
+footer{padding:40px 24px;border-top:1px solid var(--card-border)}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-links{display:flex;gap:24px}
+.footer-links a{color:var(--muted);font-size:.85rem;font-weight:300;transition:color .2s}
+.footer-links a:hover{color:var(--ivory)}
+.footer-copy{color:var(--muted);font-size:.8rem;font-weight:300}
+
+/* ─── MOBILE ─── */
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .nav-links.open{display:flex;position:absolute;top:60px;left:0;right:0;flex-direction:column;background:var(--bg);padding:24px;border-bottom:1px solid var(--card-border);gap:16px}
+  .hero h1{font-size:clamp(2.2rem,10vw,3.5rem)}
+  .app-dash{grid-template-columns:1fr}
+  .app-sidebar{display:none}
+  .metric-row{grid-template-columns:1fr 1fr}
+  .panels-row{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr;gap:48px}
+  .bento-grid{grid-template-columns:1fr}
+  .bento-card.wide{grid-column:span 1}
+  .hiw-grid{grid-template-columns:1fr}
+  .hiw-visual{position:static}
+  .pricing-grid{grid-template-columns:1fr}
+  .test-grid{grid-template-columns:1fr}
+  .footer-inner{flex-direction:column;text-align:center}
+  .cta-row{flex-direction:column;gap:12px}
+  .cta-row input{border-radius:12px;border-right:1px solid var(--card-border)}
+  .cta-row .btn-coral{border-radius:12px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="container nav-inner">
+    <a href="#" class="nav-logo">Lingah</a>
+    <div class="nav-links" id="navLinks">
+      <a href="#features">Features</a>
+      <a href="#hiw">How it works</a>
+      <a href="#pricing">Pricing</a>
+    </div>
+    <div class="nav-right">
+      <button class="btn-ghost" onclick="location.href='#'">Sign in</button>
+      <button class="btn-coral" onclick="location.href='#'">Try free</button>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="badge reveal"><span>✦</span> Early Access · 12,000+ on waitlist</div>
+  <h1 class="reveal">One app for<br><span class="line2">your entire life.</span></h1>
+  <p class="hero-sub reveal">Stop toggling between 10 apps. Lingah unifies your tasks, money, health, and goals into one beautifully simple platform.</p>
+  <div class="hero-btns reveal">
+    <button class="btn-coral" onclick="location.href='#'">Open the app →</button>
+    <button class="btn-ghost" onclick="location.href='#features'">See what's inside</button>
+  </div>
+  <div class="browser-mock reveal">
+    <div class="browser-bar">
+      <div class="browser-dot"></div>
+      <div class="browser-dot"></div>
+      <div class="browser-dot"></div>
+      <div class="browser-url">app.lingah.com/dashboard</div>
+    </div>
+    <div class="app-dash">
+      <div class="app-sidebar">
+        <div class="app-sidebar-item active">◎ Dashboard</div>
+        <div class="app-sidebar-item">☑ Tasks</div>
+        <div class="app-sidebar-item">₹ Finance</div>
+        <div class="app-sidebar-item">♡ Health</div>
+        <div class="app-sidebar-item">◉ Goals</div>
+        <div class="app-sidebar-item">✎ Journal</div>
+        <div class="app-sidebar-item">⚙ Settings</div>
+      </div>
+      <div class="app-main">
+        <div class="metric-row">
+          <div class="metric-card"><div class="label">Tasks</div><div class="val">12/18</div></div>
+          <div class="metric-card"><div class="label">Budget</div><div class="val">₹34.2k</div></div>
+          <div class="metric-card"><div class="label">Habits</div><div class="val">6/7</div></div>
+          <div class="metric-card"><div class="label">Goals</div><div class="val">73%</div></div>
+        </div>
+        <div class="panels-row">
+          <div class="panel">
+            <div class="panel-title">Today's Tasks</div>
+            <div class="task-item done"><div class="task-check"></div>Review monthly budget</div>
+            <div class="task-item done"><div class="task-check"></div>Morning workout</div>
+            <div class="task-item"><div class="task-check"></div>Prepare presentation deck</div>
+            <div class="task-item"><div class="task-check"></div>Call insurance provider</div>
+            <div class="task-item"><div class="task-check"></div>Grocery shopping list</div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">Habit Tracker</div>
+            <div class="habit-row"><span>Meditate</span><div class="habit-dots"><div class="habit-dot filled"></div><div class="habit-dot filled"></div><div class="habit-dot filled"></div><div class="habit-dot filled"></div><div class="habit-dot filled"></div><div class="habit-dot"></div><div class="habit-dot"></div></div></div>
+            <div class="habit-row"><span>Read 30m</span><div class="habit-dots"><div class="habit-dot filled"></div><div class="habit-dot filled"></div><div class="habit-dot"></div><div class="habit-dot filled"></div><div class="habit-dot filled"></div><div class="habit-dot filled"></div><div class="habit-dot"></div></div></div>
+            <div class="habit-row"><span>No sugar</span><div class="habit-dots"><div class="habit-dot filled"></div><div class="habit-dot"></div><div class="habit-dot filled"></div><div class="habit-dot filled"></div><div class="habit-dot"></div><div class="habit-dot filled"></div><div class="habit-dot filled"></div></div></div>
+            <div class="habit-row"><span>Walk 8k</span><div class="habit-dots"><div class="habit-dot filled"></div><div class="habit-dot filled"></div><div class="habit-dot filled"></div><div class="habit-dot"></div><div class="habit-dot filled"></div><div class="habit-dot"></div><div class="habit-dot filled"></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track" id="marquee">
+    <div class="marquee-item">✓ Tasks &amp; Reminders</div>
+    <div class="marquee-item">·</div>
+    <div class="marquee-item">₹ Finance Tracker</div>
+    <div class="marquee-item">·</div>
+    <div class="marquee-item">♡ Health &amp; Habits</div>
+    <div class="marquee-item">·</div>
+    <div class="marquee-item">◎ Goal Setting</div>
+    <div class="marquee-item">·</div>
+    <div class="marquee-item">✎ Daily Journal</div>
+    <div class="marquee-item">·</div>
+    <div class="marquee-item">🔔 Smart Reminders</div>
+    <div class="marquee-item">·</div>
+    <div class="marquee-item">📊 Insights</div>
+    <div class="marquee-item">·</div>
+    <div class="marquee-item">🔒 Private by design</div>
+    <div class="marquee-item">·</div>
+    <div class="marquee-item">✓ Tasks &amp; Reminders</div>
+    <div class="marquee-item">·</div>
+    <div class="marquee-item">₹ Finance Tracker</div>
+    <div class="marquee-item">·</div>
+    <div class="marquee-item">♡ Health &amp; Habits</div>
+    <div class="marquee-item">·</div>
+    <div class="marquee-item">◎ Goal Setting</div>
+    <div class="marquee-item">·</div>
+    <div class="marquee-item">✎ Daily Journal</div>
+    <div class="marquee-item">·</div>
+    <div class="marquee-item">🔔 Smart Reminders</div>
+    <div class="marquee-item">·</div>
+    <div class="marquee-item">📊 Insights</div>
+    <div class="marquee-item">·</div>
+    <div class="marquee-item">🔒 Private by design</div>
+    <div class="marquee-item">·</div>
+  </div>
+</div>
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="reveal">
+        <div class="stat-number" data-target="91" data-suffix="%">0%</div>
+        <div class="stat-label">of users would switch to one app if it truly met all their needs</div>
+      </div>
+      <div class="reveal">
+        <div class="stat-number" data-target="51" data-suffix=" min">0 min</div>
+        <div class="stat-label">lost every week switching between different apps</div>
+      </div>
+      <div class="reveal">
+        <div class="stat-number" data-target="968" data-prefix="$" data-suffix="B">$0B</div>
+        <div class="stat-label">projected global super-app market size by 2033</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-eyebrow">Modules</div>
+      <h2 class="section-headline">Everything you need.<br>Nothing you don't.</h2>
+    </div>
+    <div class="bento-grid">
+      <div class="bento-card wide reveal">
+        <div class="bento-icon" style="background:rgba(255,92,53,0.1);color:var(--accent)">☑</div>
+        <h3>Tasks &amp; Reminders</h3>
+        <p>Organize your day with smart task lists, recurring reminders, and priority sorting. Never let anything slip through the cracks.</p>
+        <div class="bento-tag">Core · Free</div>
+      </div>
+      <div class="bento-card reveal">
+        <div class="bento-icon" style="background:rgba(0,194,168,0.1);color:var(--teal)">₹</div>
+        <h3>Finance Tracker</h3>
+        <p>Track income, expenses, and budgets. Visualize where your money goes with clean summaries.</p>
+        <div class="bento-tag">Module · Pro</div>
+      </div>
+      <div class="bento-card reveal">
+        <div class="bento-icon" style="background:rgba(59,130,246,0.1);color:var(--blue)">♡</div>
+        <h3>Health &amp; Habits</h3>
+        <p>Build streaks, track workouts, log meals, and monitor wellness — all in one place.</p>
+        <div class="bento-tag">Module · Pro</div>
+      </div>
+      <div class="bento-card reveal">
+        <div class="bento-icon" style="background:rgba(139,92,246,0.1);color:var(--violet)">◎</div>
+        <h3>Goals</h3>
+        <p>Set long-term goals, break them into milestones, and watch your progress compound over time.</p>
+        <div class="bento-tag">Module · Pro</div>
+      </div>
+      <div class="bento-card reveal">
+        <div class="bento-icon" style="background:rgba(255,92,53,0.1);color:var(--accent)">✎</div>
+        <h3>Daily Journal</h3>
+        <p>Reflect on your day, capture thoughts, and build a searchable personal archive of your life.</p>
+        <div class="bento-tag">Core · Free</div>
+      </div>
+      <div class="bento-card bento-placeholder reveal">
+        <span>+ More coming soon</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="hiw-section" id="hiw">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-eyebrow">How it works</div>
+      <h2 class="section-headline">Three steps to simplicity.</h2>
+    </div>
+    <div class="hiw-grid">
+      <div class="hiw-steps">
+        <div class="hiw-step active" data-step="0">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Start with the core</h3>
+            <p>Sign up and get instant access to Tasks, Journal, and Notes — completely free, forever.</p>
+          </div>
+        </div>
+        <div class="hiw-step" data-step="1">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Pick your modules</h3>
+            <p>Add Finance, Health, Goals, or any module you need. Only pay for what you actually use.</p>
+          </div>
+        </div>
+        <div class="hiw-step" data-step="2">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Live simply</h3>
+            <p>Everything syncs together. One dashboard, one search, one place for your entire life.</p>
+          </div>
+        </div>
+      </div>
+      <div class="hiw-visual">
+        <div class="hiw-panel active" id="hiwPanel0">
+          <h4>Your free core tools</h4>
+          <div class="hiw-module-grid">
+            <div class="hiw-module selected"><div class="m-icon">☑</div><div class="m-name">Tasks</div><div class="m-desc">Smart task lists &amp; reminders</div></div>
+            <div class="hiw-module selected"><div class="m-icon">✎</div><div class="m-name">Journal</div><div class="m-desc">Daily reflections &amp; notes</div></div>
+            <div class="hiw-module selected"><div class="m-icon">📝</div><div class="m-name">Notes</div><div class="m-desc">Quick capture &amp; organize</div></div>
+            <div class="hiw-module" style="opacity:.4"><div class="m-icon">🔒</div><div class="m-name">More</div><div class="m-desc">Unlock with Pro</div></div>
+          </div>
+        </div>
+        <div class="hiw-panel" id="hiwPanel1">
+          <h4>Build your perfect setup</h4>
+          <div class="hiw-module-grid">
+            <div class="hiw-module selected"><div class="m-icon">☑</div><div class="m-name">Tasks</div><div class="m-desc">Always included</div></div>
+            <div class="hiw-module selected"><div class="m-icon">✎</div><div class="m-name">Journal</div><div class="m-desc">Always included</div></div>
+            <div class="hiw-module selected"><div class="m-icon">₹</div><div class="m-name">Finance</div><div class="m-desc">Track your money</div></div>
+            <div class="hiw-module selected"><div class="m-icon">♡</div><div class="m-name">Health</div><div class="m-desc">Habits &amp; wellness</div></div>
+            <div class="hiw-module selected"><div class="m-icon">◎</div><div class="m-name">Goals</div><div class="m-desc">Milestones &amp; progress</div></div>
+            <div class="hiw-module" style="opacity:.4;border-style:dashed"><div class="m-icon">+</div><div class="m-name">Add more</div><div class="m-desc">As you need them</div></div>
+          </div>
+        </div>
+        <div class="hiw-panel" id="hiwPanel2">
+          <h4>One unified dashboard</h4>
+          <div class="hiw-unified">
+            <div class="hiw-unified-row"><div class="u-dot" style="background:var(--accent)"></div><span>3 tasks due today — presentation at 2pm</span></div>
+            <div class="hiw-unified-row"><div class="u-dot" style="background:var(--teal)"></div><span>Budget on track — ₹12.4k remaining this month</span></div>
+            <div class="hiw-unified-row"><div class="u-dot" style="background:var(--blue)"></div><span>5-day meditation streak 🔥</span></div>
+            <div class="hiw-unified-row"><div class="u-dot" style="background:var(--violet)"></div><span>Marathon goal — 68% complete</span></div>
+            <div class="hiw-unified-row"><div class="u-dot" style="background:var(--accent)"></div><span>Journal: "Feeling focused and productive"</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="container">
+    <div class="reveal" style="text-align:center">
+      <div class="section-eyebrow">Pricing</div>
+      <h2 class="section-headline">Start free. Upgrade when ready.</h2>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card reveal">
+        <div class="price-label">Free Core</div>
+        <div class="price-amount">₹0</div>
+        <div class="price-period">Free forever</div>
+        <ul class="price-features">
+          <li>Tasks &amp; Reminders</li>
+          <li>Daily Journal</li>
+          <li>Notes</li>
+          <li>Offline mode</li>
+          <li>Cross-device sync</li>
+          <li class="dimmed">Finance Tracker</li>
+          <li class="dimmed">Health &amp; Habits</li>
+          <li class="dimmed">Goals</li>
+        </ul>
+        <button class="btn-ghost" onclick="location.href='#'">Get started free</button>
+      </div>
+      <div class="price-card pro reveal">
+        <div class="price-label">Lingah Pro ✦</div>
+        <div class="price-amount">₹499<span style="font-size:1rem;font-weight:400;color:var(--muted)">/mo</span></div>
+        <div class="price-period">Everything, unlocked</div>
+        <ul class="price-features">
+          <li>All free features</li>
+          <li>All modules included</li>
+          <li>AI-powered suggestions</li>
+          <li>Data export &amp; backup</li>
+          <li>Priority support</li>
+          <li>Advanced analytics</li>
+          <li>Custom themes</li>
+          <li>Early access to new modules</li>
+        </ul>
+        <button class="btn-coral" onclick="location.href='#'">Start 14-day free trial</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div class="container">
+    <div class="reveal" style="text-align:center">
+      <div class="section-eyebrow">Testimonials</div>
+      <h2 class="section-headline">Loved by early adopters.</h2>
+    </div>
+    <div class="test-grid">
+      <div class="test-card reveal">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-quote">"I used to jump between Todoist, Notion, and a spreadsheet for my budget. Lingah replaced all three in a weekend. It just makes sense."</p>
+        <div class="test-author">
+          <div class="test-avatar" style="background:var(--accent)">A</div>
+          <div><div class="test-name">Arjun M.</div><div class="test-loc">Bengaluru, India 🇮🇳</div></div>
+        </div>
+      </div>
+      <div class="test-card reveal">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-quote">"The habit tracker alone is worth it, but having my finances and goals right there too? Game-changer. I finally feel in control of my life."</p>
+        <div class="test-author">
+          <div class="test-avatar" style="background:var(--teal)">C</div>
+          <div><div class="test-name">Chidinma O.</div><div class="test-loc">Lagos, Nigeria 🇳🇬</div></div>
+        </div>
+      </div>
+      <div class="test-card reveal">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-quote">"Clean, fast, and private. I love that I only pay for the modules I need. The journal feature has become my daily therapy."</p>
+        <div class="test-author">
+          <div class="test-avatar" style="background:var(--violet)">R</div>
+          <div><div class="test-name">Rania S.</div><div class="test-loc">Jakarta, Indonesia 🇮🇩</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <h2 class="reveal">Your whole life.<br>One beautiful app.</h2>
+  <div class="cta-row reveal">
+    <input type="email" placeholder="Enter your email" aria-label="Email address">
+    <button class="btn-coral">Get early access →</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container footer-inner">
+    <a href="#" class="nav-logo">Lingah</a>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+      <a href="#">Open App</a>
+    </div>
+    <div class="footer-copy">&copy; 2026 Lingah. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+// Nav scroll effect
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// Hamburger
+document.getElementById('hamburger').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+
+// Reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Count-up animation
+const countObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const el = entry.target;
+    const target = parseInt(el.dataset.target);
+    const suffix = el.dataset.suffix || '';
+    const prefix = el.dataset.prefix || '';
+    let current = 0;
+    const duration = 2000;
+    const step = target / (duration / 16);
+    const timer = setInterval(() => {
+      current += step;
+      if (current >= target) { current = target; clearInterval(timer); }
+      el.textContent = prefix + Math.floor(current) + suffix;
+    }, 16);
+    countObserver.unobserve(el);
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-number').forEach(el => countObserver.observe(el));
+
+// How it works step switcher
+document.querySelectorAll('.hiw-step').forEach(step => {
+  step.addEventListener('click', () => {
+    document.querySelectorAll('.hiw-step').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.hiw-panel').forEach(p => p.classList.remove('active'));
+    step.classList.add('active');
+    document.getElementById('hiwPanel' + step.dataset.step).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
