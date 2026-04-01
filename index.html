@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23ff5c35'/%3E%3Cstop offset='100%25' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='url(%23g)'%3E%3Ccircle cx='16' cy='16' r='3.2'/%3E%3Crect x='13' y='1.5' width='6' height='12' rx='3' transform='rotate(15,16,16)'/%3E%3Crect x='18.5' y='13' width='12' height='6' rx='3' transform='rotate(15,16,16)'/%3E%3Crect x='13' y='18.5' width='6' height='12' rx='3' transform='rotate(15,16,16)'/%3E%3Crect x='1.5' y='13' width='12' height='6' rx='3' transform='rotate(15,16,16)'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -46,7 +46,7 @@ body::before{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
 /* Typography */
-h1,h2,h3,h4,h5{font-family:inherit;font-weight:600;line-height:1.1;letter-spacing:-0.04em;text-wrap:balance}
+h1,h2,h3,h4,h5{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:600;line-height:1.1;letter-spacing:-0.04em;text-wrap:balance}
 p{text-wrap:pretty}
 a{color:inherit;text-decoration:none}
 .container{max-width:1180px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
@@ -62,7 +62,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;transition:all .35s var(--e
 nav.scrolled{background:var(--glass);-webkit-backdrop-filter:blur(24px) saturate(1.5);backdrop-filter:blur(24px) saturate(1.5)}
 nav.scrolled .nav-bg{border-bottom-color:var(--border)}
 .nav-inner{display:flex;align-items:center;justify-content:space-between}
-.logo{display:flex;align-items:center;gap:9px;font-weight:600;font-size:1.15rem;color:var(--text-1);letter-spacing:-0.03em}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Space Grotesk',system-ui,sans-serif;font-weight:600;font-size:1.15rem;color:var(--text-1);letter-spacing:-0.03em}
 .logo svg{width:26px;height:26px;flex-shrink:0}
 .nav-links{display:flex;align-items:center;gap:32px}
 .nav-links a{font-size:.875rem;font-weight:400;color:var(--text-3);letter-spacing:-0.01em;transition:color .15s}
@@ -106,7 +106,7 @@ nav.scrolled .nav-bg{border-bottom-color:var(--border)}
 .m-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .m-card{padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--bg-elevated)}
 .m-card .m-label{font-size:.62rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.07em;font-weight:500;margin-bottom:3px}
-.m-card .m-val{font-size:1.15rem;font-weight:600;letter-spacing:-0.03em;font-variant-numeric:tabular-nums}
+.m-card .m-val{font-family:'Space Grotesk',system-ui,sans-serif;font-size:1.15rem;font-weight:600;letter-spacing:-0.03em;font-variant-numeric:tabular-nums}
 .m-card:nth-child(1) .m-val{color:var(--accent)}.m-card:nth-child(2) .m-val{color:var(--teal)}
 .m-card:nth-child(3) .m-val{color:var(--blue)}.m-card:nth-child(4) .m-val{color:var(--violet)}
 .p-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1}
@@ -129,7 +129,7 @@ nav.scrolled .nav-bg{border-bottom-color:var(--border)}
 /* ── STATS ── */
 .stats{padding:140px 24px}
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;text-align:center}
-.stat-n{font-size:clamp(2.4rem,5vw,3.6rem);font-weight:700;color:var(--accent);letter-spacing:-0.04em;margin-bottom:10px;font-variant-numeric:tabular-nums}
+.stat-n{font-family:'Space Grotesk',system-ui,sans-serif;font-size:clamp(2.4rem,5vw,3.6rem);font-weight:700;color:var(--accent);letter-spacing:-0.04em;margin-bottom:10px;font-variant-numeric:tabular-nums}
 .stat-l{color:var(--text-3);font-size:.875rem;font-weight:400;max-width:250px;margin:0 auto;line-height:1.55}
 
 /* ── FEATURES ── */
